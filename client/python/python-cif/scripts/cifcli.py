@@ -3,6 +3,8 @@
 import cif
 import argparse
 import os
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 if __name__ == '__main__':
     # Parse Command Line Arguments
@@ -10,12 +12,16 @@ if __name__ == '__main__':
 
     parser.add_argument("-q",'--query', nargs='*',metavar="QUERY")
     parser.add_argument('-s','--severity',help="specify the default severity")
-    parser.add_argument('-r','--restriction')
-    parser.add_argument("-f", '--fields',nargs='*',metavar="FIELD")
-    parser.add_argument("-c","--config",default=os.path.expanduser("~/.cif"))
+    parser.add_argument('-c','--confidence',help="specify the default confidence")
+    parser.add_argument('-r','--restriction',help='specify the default restriction')
+    parser.add_argument("-f",'--fields',nargs='*',metavar="FIELD")
+    parser.add_argument("-C","--config",default=os.path.expanduser("~/.cif"))
     parser.add_argument("-n","--nolog",action="store_true",default=False,help="do not log the query on the server")
+    parser.add_argument("-S","--simple",default=True,help="convert complex json documents to simple documents")
+    parser.add_argument("-g","--guid",help="default group id (guid)")
+    parser.add_argument("-T","--no_verify_tls",default=False,action="store_true")
     args = parser.parse_args()
-    print args
+    #print args
 
     if not args.query:
         parser.print_help()
@@ -25,14 +31,17 @@ if __name__ == '__main__':
         print "python cifcli.py -q 1.2.3.4 -n\n"
         os._exit(-1)        
 
-    rclient = cif.ClientINI(path=args.config,fields=args.fields,nolog=args.nolog)
+    rclient = cif.ClientINI(path=args.config,fields=args.fields,no_verify_tls=args.no_verify_tls)
 
     for query in args.query:
-        rclient.GET(query,args.severity,args.restriction,args.nolog)
+        # this returns a dict
+        # need to translate it to an object with "plugin" type properties
+        feed = rclient.GET(query,args.severity,args.restriction,args.nolog,args.confidence,args.simple,args.guid)
         if rclient.responseCode != 200:
             print 'request failed with code: ' + str(rclient.responseCode)
             os._exit(-1)
 
-        print "Query: " + query
-        text = rclient.table(rclient.responseContent)
-        print text
+        if feed:
+            print "Query: " + query
+            text = rclient.table(feed)
+            print text
