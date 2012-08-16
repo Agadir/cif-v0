@@ -1,6 +1,9 @@
 Collective Intelligence Framework
 =================================
 
+0.03    2012-XX
+    - [silas.cutler@gmail.com] added contrib section with ubuntu 12 installer
+
 0.02    2012-07-25
     - minor utf8 bugfixes to cif_feedparser
 
