@@ -31,6 +31,7 @@ use Getopt::Std;
 use CIF::FeedParser;
 use Config::Simple;
 use Data::Dumper;
+use Try::Tiny;
 
 my %opts;
 getopts('hs:T:t:dFc:f:',\%opts);
@@ -97,11 +98,16 @@ if($sconfig && $sconfig->param(-block => 'database')){
     $c->{'database'} = ['DBI:'.$sconfig->{'driver'}.':database='.$sconfig->{'database'}.';host='.$sconfig->{'host'},$sconfig->{'user'},$sconfig->{'password'},{AutoCommit => 1}];
 }
 
-my ($err,$items) = CIF::FeedParser->parse($c);
+my ($err,$items);
+try {
+    ($err,$items) = CIF::FeedParser->parse($c);
+} catch {
+    $err = shift;
+}
 if($err){
     unless($err =~ /no content/){
         warn($err);
-        exit(-1);
+        warn('skipping...');
     }
     exit(0);
 }
