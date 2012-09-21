@@ -103,7 +103,7 @@ try {
     ($err,$items) = CIF::FeedParser->parse($c);
 } catch {
     $err = shift;
-}
+};
 if($err){
     unless($err =~ /no content/){
         warn($err);
