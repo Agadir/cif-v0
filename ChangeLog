@@ -1,8 +1,11 @@
 Collective Intelligence Framework
 =================================
 
-0.03    2012-XX
+0.03    2012-09-27
     - [silas.cutler@gmail.com] added contrib section with ubuntu 12 installer
+    - added 'make purgedb' to makefile
+    - misc bugfixes
+    - added alienvault.cfg
 
 0.02    2012-07-25
     - minor utf8 bugfixes to cif_feedparser

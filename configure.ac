@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.64])
-AC_INIT(cif-v0, m4_esyscmd([git describe --tags]), [ci-framework@googlegroups.com])
+AC_INIT(cif-v0, m4_esyscmd_s([git describe --tags]), [ci-framework@googlegroups.com])
 AC_CONFIG_SRCDIR([lib/CIF.pm])
 AM_INIT_AUTOMAKE
 

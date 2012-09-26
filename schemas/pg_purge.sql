@@ -1,4 +1,6 @@
+BEGIN;
 DELETE FROM archive;
+DELETE FROM analytic;
 DELETE FROM domain;
 DELETE FROM infrastructure;
 DELETE FROM url;
@@ -10,3 +12,4 @@ DELETE FROM hash;
 DELETE FROM rir;
 DELETE FROM asn;
 DELETE FROM countrycode;
+COMMIT;
