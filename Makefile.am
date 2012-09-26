@@ -1,5 +1,7 @@
 EXTRA_DIST = lib etc sbin bin schemas schemas example_api.conf
 
+BUILD=$(shell git describe --tags)
+
 all: default
 
 default:
@@ -88,6 +90,9 @@ tableindex:
 	$(PSQL) -U $(DB_DBA) -d $(DB_DATABASE) -h $(DB_HOST) -p $(DB_PORT) < "schemas/$(DB_TYPE)/index/$$file" ; \
 	done
 	@echo "Table Indicies built"
+
+purgedb:
+	$(PSQL) -U $(DB_DBA) -h $(DB_HOST) -p $(DB_PORT) -d $(DB_DATABASE) < "schemas/pg_purge.sql"
 
 dropdb: dropdatabase droparchive dropindex          
 
