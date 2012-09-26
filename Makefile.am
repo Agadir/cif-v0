@@ -121,31 +121,6 @@ realclean: clean
 reconf:
 	autoreconf -vf
 
-BUILD=b$(shell date +%Y%m%d_%H%M%S)
-TAG=0.01
-SNAPSHOT=cif-$(TAG)-$(BUILD)
-RELEASE=cif-$(TAG)
-snapshot: build-snapshot
-release: build-release
 
-build-release:
-	rm -Rf "/tmp/$(RELEASE)"
-	svn export ./ /tmp/$(RELEASE)
-	( cd /tmp/$(RELEASE) && \
-		echo "$(TAG)" > .tag && \
-		sh rebuild.sh && \
-		make dist && \
-		cp $(RELEASE).tar.gz /tmp/ \
-	)
-	rm -R -f "/tmp/$(RELEASE)"
-
-build-snapshot:
-	rm -Rf "/tmp/$(SNAPSHOT)"
-	svn export ./ /tmp/$(SNAPSHOT)
-	( cd /tmp/$(SNAPSHOT) && \
-		echo "$(TAG)-$(BUILD)" > .tag && \
-		sh rebuild.sh && \
-		make dist && \
-		cp $(SNAPSHOT).tar.gz /tmp/ \
-	)
-	rm -R -f "/tmp/$(SNAPSHOT)"
+snapshot:
+	git archive --format=tar --prefix=$(BUILD)/ $(BUILD) | gzip > $(SNAPSHOT).tar.gz
