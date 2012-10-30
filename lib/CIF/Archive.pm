@@ -279,7 +279,7 @@ sub prune {
     $class->db_Main->{'AutoCommit'} = 0;
 
     foreach (@datatype_plugs){
-        next if($_ =~ /(Analytic|Feed)/);
+        next if($_ =~ /(Analytic)/);
         warn 'pruning: '.$_ if($::debug);
         eval { $_->sql_prune->execute($date,$confidence,$severity); };
         if($@){
