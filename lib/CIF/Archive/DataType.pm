@@ -162,7 +162,7 @@ __PACKAGE__->set_sql('_feed' => qq{
 __PACKAGE__->set_sql('prune' => qq{
     DELETE FROM __TABLE__
     WHERE
-        created >= ?
+        created <= ?
         AND confidence < ?
         AND severity < ?
 });
