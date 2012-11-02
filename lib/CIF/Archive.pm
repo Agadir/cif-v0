@@ -279,12 +279,14 @@ sub prune {
     foreach (@datatype_plugs){
         next if($_ =~ /(Analytic)/);
         warn 'pruning: '.$_ if($::debug);
-        eval { $_->sql_prune->execute($date); };
+        my $ret = eval { $_->sql_prune->execute($date); };
         if($@){
             warn $@;
             $class->dbi_rollback();
             return(0);
         }
+        $ret = 0 unless($ret > 0);
+        warn 'removing: '.$ret.' entries...';
     }
 
     eval { $class->sql_prune->execute($date); };

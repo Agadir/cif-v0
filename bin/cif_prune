@@ -72,4 +72,4 @@ if($specific){
 }
 eval "require $p";
 die($@) if($@);
-my $ret = $p->prune($dt,$confidence,$severity);
+my $ret = $p->prune($dt);
