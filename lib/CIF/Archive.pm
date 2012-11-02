@@ -271,17 +271,15 @@ sub lookup {
 }
 
 sub prune {
-    my $class = shift;
-    my $date = shift || return;
-    my $confidence = shift || return;
-    my $severity = shift || return;
+    my $class       = shift;
+    my $date        = shift;
 
     $class->db_Main->{'AutoCommit'} = 0;
 
     foreach (@datatype_plugs){
         next if($_ =~ /(Analytic)/);
         warn 'pruning: '.$_ if($::debug);
-        eval { $_->sql_prune->execute($date,$confidence,$severity); };
+        eval { $_->sql_prune->execute($date); };
         if($@){
             warn $@;
             $class->dbi_rollback();

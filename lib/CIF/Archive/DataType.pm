@@ -163,8 +163,6 @@ __PACKAGE__->set_sql('prune' => qq{
     DELETE FROM __TABLE__
     WHERE
         created <= ?
-        AND confidence < ?
-        AND severity < ?
 });
 
 sub prune {
@@ -173,7 +171,7 @@ sub prune {
     $class->db_Main->{'AutoCommit'} = 0;
 
     warn 'pruning: '.$class if($::debug);
-    eval { $class->sql_prune->execute($date,$confidence,$severity); };
+    eval { $class->sql_prune->execute($date); };
     if($@){
         warn $@;
         $class->dbi_rollback();
