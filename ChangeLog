@@ -1,6 +1,9 @@
 Collective Intelligence Framework
 =================================
 
+0.05    2012-11-27
+    - [Dirk Stander <dst@glaskugel.org>, wesyoung.me] security fix to buldNext() function in WebAPI protecting against unsafe chars
+
 0.04    2012-11-02
     - bugfix to cif_prune
 

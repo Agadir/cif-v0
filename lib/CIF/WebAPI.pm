@@ -272,6 +272,15 @@ sub GET {
 sub buildNext {
     my ($self,$frag,$req) = @_;
     $frag = lc($frag);
+    
+    # protect against bad chars and potential remote command exec.
+    # ;, /..+/ and system(), etc   
+    my $bad_chars = qr/(\/?\.\.+\/?|;|\w+\(|=>)/;
+    
+    unless($frag =~ /^[a-zA-Z0-9_\.\/\-@]+$/ && $frag !~ $bad_chars){  
+        warn ("unsafe characters in class name:($frag)"); 
+        return undef;
+    }
 
     if(CIF::Archive::isUUID($frag)){
         $self->{'query'} = $frag;
