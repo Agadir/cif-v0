@@ -179,7 +179,7 @@ sub _insert {
     
     $a = substr($a,0,40);
     $a .= '...';
-    print $source.' -- '.$id->uuid().' -- '.$f->{'impact'}.' '.$f->{'description'}.' -- '.$a."\n";
+    print $source.' -- '.$id->uuid().' -- '.$f->{'detecttime'}.' '.$f->{'impact'}.' '.$f->{'description'}.' -- '.$a."\n";
     return(0);
 }
 
@@ -244,15 +244,17 @@ sub process {
     } else {
         # sort by detecttime and only process the last 5 days of stuff
         ## TODO -- make this configurable
-        my $goback = DateTime->from_epoch(epoch => (time() - (84600 * 5)));
+        my $goback = DateTime->from_epoch(epoch => (time() - (84600 * 3)));
         $goback = $goback->ymd().'T'.$goback->hms().'Z';
+        
         my @rr;
         foreach (@$recs){
             last if(($_->{'detecttime'} cmp $goback) == -1);
             push(@rr,$_);
         }
+        $recs = \@rr;
         # TODO -- round robin the split?
-        $batches = split_batches($threads,\@rr);
+        $batches = split_batches($threads,$recs);
     }
 
     if(scalar @{$batches} == 1){

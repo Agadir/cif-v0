@@ -5,7 +5,10 @@ use strict;
 # fix lib paths, some may be relative
 BEGIN {
     require File::Spec;
-    my @libs = ("lib", "local/lib");
+    my @libs = (
+        "lib", 
+        "local/lib",
+    );
     my $bin_path;
 
     for my $lib (@libs) {
@@ -26,6 +29,8 @@ BEGIN {
     }
 
 }
+
+use lib '../cif-client/lib';
 
 use Getopt::Std;
 use CIF::FeedParser;
