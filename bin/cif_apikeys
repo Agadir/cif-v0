@@ -35,11 +35,12 @@ use Data::Dumper;
 my %opts;
 getopt('G:g:e:k:u:', \%opts);
 die(usage()) if($opts{'h'});
-my $user = $opts{'u'};
-my $access = $opts{'e'};
-my $groups = $opts{'g'};
-my $default_guid = $opts{'G'};
-my $desc = $opts{'D'};
+my $user            = $opts{'u'};
+my $access          = $opts{'e'};
+my $groups          = $opts{'g'};
+my $default_guid    = $opts{'G'};
+my $desc            = $opts{'D'};
+my $export          = $opts{'E'} || 0;
 
 if($default_guid){
     $default_guid = CIF::Utils::genSourceUUID($default_guid) unless(CIF::Utils::isUUID($default_guid));
@@ -63,6 +64,7 @@ Usage: perl $0 -u joe\@example.com
     -g  --groups:   add user to list of groups (eg: everyone,group1,group2)
     -G  --default group: set the default group
     -D  --desc:     give the key an optional description
+    -E  --export:   export the apikeys data to json
 
 Examples:
     \$> perl $0 -u joe\@example.com
@@ -73,6 +75,31 @@ Examples:
     \$> perl $0 -k 96818121-f1b6-482e-8851-8fb49cb2f6c0 -r
     \$> perl $0 -l
 EOF
+}
+
+if($export){
+    my $array;
+    require JSON::XS;
+    my @r = CIF::WebAPI::APIKey->retrieve_all();
+    foreach (@r){
+        my @groups = map { $_ = $_->guid() } $_->groups();
+        push(@$array,
+            {
+                uuid            => $_->uuid(),
+                uuid_alias      => $_->uuid_alias(),
+                description     => $_->description(),
+                write           => $_->write(),
+                revoked         => $_->revoked(),
+                parentid        => $_->parentid(),
+                groups          => \@groups,
+                default_guid    => $_->default_guid(),
+            },
+        );
+    }
+    $array = JSON::XS::encode_json($array);
+    print $array."\n";
+            
+    exit(0);   
 }
 
 if(exists($opts{'a'})){
