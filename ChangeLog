@@ -1,7 +1,7 @@
 Collective Intelligence Framework
 =================================
 
-0.06    2013-XX-XX
+0.06    2013-01-16
     - minor bugfixes to the parser
     - added export functionality to cif_apikeys for v1 migration
 
